@@ -1,9 +1,18 @@
+
+"""
+네이버 블로그 이미지 다운로더
+
+pip install requests beautifulsoup4 urllib3
+"""
+
 import os
+import re
 import requests
+import time
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, unquote, urlparse
-import re
 
+###################################### 함수 ##############################################
 def get_soup_from_url(session, url):
     response = session.get(url)
     return BeautifulSoup(response.text, 'html.parser')
@@ -26,10 +35,11 @@ def safe_file_name(url):
     # 확장자에서 '_' 이후의 문자열 제거
     safe_ext = safe_ext.split('_')[0]
 
-    return safe_base_name + safe_ext  # 원래의 확장자를 유지하면서 안전한 파일 이름 반환
+    # 원래의 확장자를 유지하면서 안전한 파일 이름 반환
+    return safe_base_name + safe_ext  
 
 def check_url_exist(session, url):
-    """주어진 URL이 존재하는지 404 상태 코드를 기준으로 확인합니다."""
+    #URL의 404여부 확인
     try:
         response = session.head(url, timeout=5)
         return response.status_code != 404
@@ -117,7 +127,18 @@ def process_blog_urls(file_path, save_directory):
         else:
             print("URL이 비어있습니다.")
 
-# 사용 예시
+
+###################################### 본문 ##############################################
+            
+
+# 사용자에게 다운로드 시작 알림
+print("네이버 블로그 이미지 다운로더")
+time.sleep(1)
+print("Copyright 2023. NJHDev. All rights reserved.")
+time.sleep(1)
+print("이미지 다운로드를 시작합니다.")
+time.sleep(1)
+
 blog_urls_file = 'blog-urls.txt'  # 네이버 블로그 URL이 저장된 텍스트 파일
 save_directory = 'result-file'  # 현재 디렉토리에 저장될 하위 폴더 이름
 process_blog_urls(blog_urls_file, save_directory)
