@@ -50,7 +50,7 @@ def save_images_from_blog(url, save_path):
             iframe = soup.find('iframe')
             if iframe and iframe.get('src'):
                 soup = get_soup_from_url(session, urljoin(url, iframe['src']))
-                print("iframe 태그 처리 완료")
+                #print("iframe 태그 처리 완료")
 
             # HTML 전체에서 img 태그 찾기
             images = soup.find_all('img')
@@ -63,23 +63,23 @@ def save_images_from_blog(url, save_path):
                 if img.has_attr('src') and 'postfiles.pstatic.net' in img['src']:
                     img_url = urljoin(url, img['src'])
                     img_url = unquote(img_url)  # URL 디코드
-                    print(f"이미지 URL: {img_url}")
+                    #print(f"이미지 URL: {img_url}")
 
                     # 쿼리 파라미터 중 type=w80_blur를 type=w966로 대체
                     img_url = img_url.replace('type=w80_blur', 'type=w966')
-                    print(f"쿼리 파라미터 대체 후 이미지 URL: {img_url}")
+                    #print(f"쿼리 파라미터 대체 후 이미지 URL: {img_url}")
 
                     # 먼저 type=w966로 시도
                     img_name = os.path.join(save_path, safe_file_name(os.path.basename(img_url)))
                     if not check_url_exist(session, img_url):
                         # 다음으로 type=w2로 시도
                         img_url = img_url.replace('type=w966', 'type=w2')
-                        print(f"type=w2로 대체 후 이미지 URL: {img_url}")
+                        ##print(f"type=w2로 대체 후 이미지 URL: {img_url}")
                         img_name = os.path.join(save_path, safe_file_name(os.path.basename(img_url)))
                         if not check_url_exist(session, img_url):
                             # 쿼리 파라미터 제거 후 시도
                             img_url = img_url.split('?')[0]
-                            print(f"쿼리 파라미터 제거 후 이미지 URL: {img_url}")
+                            ##print(f"쿼리 파라미터 제거 후 이미지 URL: {img_url}")
                             img_name = os.path.join(save_path, safe_file_name(os.path.basename(img_url)))
                             if not check_url_exist(session, img_url):
                                 print(f"이미지를 다운로드 할 수 없습니다. ({img_url})")
